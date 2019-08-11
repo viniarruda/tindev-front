@@ -3,14 +3,14 @@ import { useStateValue } from '../../index';
 import { loadDevelopers } from '../../../sdk/matchProvider';
 import { listDeveloper } from '../actions';
 
-const useProducts = () => {
-  const [{ developers }, dispatch] = useStateValue();
+const useDevelopers = () => {
+  const [{ auth }, dispatch] = useStateValue();
   const [isLoading, setIsLoading] = useState(false);
 
   const request = async () => {
     setIsLoading(true);
 
-    const response = await loadDevelopers();
+    const response = await loadDevelopers(auth.user.id);
 
     if (response) {
       dispatch(listDeveloper(response));
@@ -23,4 +23,4 @@ const useProducts = () => {
   return [isLoading, request];
 };
 
-export default useProducts;
+export default useDevelopers;

@@ -1,23 +1,26 @@
-import { useState } from 'react'
-import { useStateValue } from '../../index'
-import {
-  login
-} from '../actions'
+import { useState } from 'react';
+import { useStateValue } from '../../index';
+import { login } from '../actions';
+import { createDeveloper } from '../../../sdk/matchProvider';
 
 const useProducts = () => {
-  const [{auth}, dispatch] = useStateValue()
-  const [isLoading, setIsLoading] = useState(false)
+  const [{ auth }, dispatch] = useStateValue();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const formData = async ({values, actions}) => {
-    setIsLoading(true)
+  const formData = async ({ values }) => {
+    setIsLoading(true);
 
-    setIsLoading(false)
-    if (values.username !== '' && values.password !== '') {
-      dispatch(login())
+    const response = await createDeveloper(values.username);
+
+    if (values.username !== '' && response) {
+      dispatch(login(response));
+      localStorage.setItem('user', JSON.stringify(response));
     }
-  }
 
-  return [auth, formData, isLoading]
-}
+    setIsLoading(false);
+  };
 
-export default useProducts
+  return [auth, formData, isLoading];
+};
+
+export default useProducts;

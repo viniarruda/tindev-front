@@ -1,6 +1,6 @@
 const api = {
-  url: 'https://5cdefc046f4437001467ad3d.mockapi.io',
-  token: ''
-}
+  url: 'http://localhost:3333',
+  token: '',
+};
 
-export default api
+export default api;

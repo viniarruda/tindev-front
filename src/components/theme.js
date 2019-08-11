@@ -1,26 +1,48 @@
 const colors = {
-  primary: '#7159c1',
+  primary: '#DF4723',
   secondary: '#9b49c1',
   default: '#fff',
-  gradient: 'linear-gradient(112deg, rgba(113,89,193,1) 0%, rgba(155,73,193,1) 100%);',
-  bg: 'linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);'
-}
+  black: '#333',
+  gray: '#999',
+  input: {
+    text: '#666',
+    border: '#ddd',
+    placeholder: '#999',
+  },
+};
 
 const viewports = {
   smartphone: '360px',
   tablet: '720px',
-  desktop: '1280px'
-}
+  desktop: '1280px',
+};
 
 const forms = {
   labelColor: colors.light,
-  errorColor: colors.danger
+  errorColor: colors.danger,
+};
+
+const typography = {
+  title: {
+    color: colors.black,
+    size: '24px',
+  },
+  subtitle: {
+    color: colors.black,
+    size: '16px',
+  },
+  text: {
+    color: colors.gray,
+    size: '14px',
+  },
+  unit: 5,
 };
 
 const theme = Object.freeze({
   colors,
   forms,
-  viewports
+  viewports,
+  typography,
 });
 
 export default theme;

@@ -1,27 +1,31 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
+import useLogin from '../../state/auth/hooks/useLogin';
 
-import useLogin from '../../state/auth/hooks/useLogin'
+import Container from '../../components/content';
+import Form from './containers/form';
+import Spinner from '../../components/spinner';
 
-import Container from './containers/container'
-import Form from './containers/form'
-import Spinner from '../../components/spinner'
+import Logo from '../../assets/logo.svg';
 
-const Login = (props) => {
-  const { from } = props.location.state || {from: {pathname: "/home"}};
+const Login = ({ location, history }) => {
   const [auth, setLogin, isLoading] = useLogin();
+  const { from } = location.state || {
+    from: { pathname: `/dev` },
+  };
 
   useEffect(() => {
     if (auth.logged) {
-      props.history.push(from);
+      history.push(from);
     }
   }, [auth]);
 
   return (
     <Container>
-      <Spinner show={isLoading} />
-      <Form onSubmit={(values, actions) => setLogin({values, actions})} />
+      {isLoading && <Spinner />}
+      <img src={Logo} alt="Tindev" />
+      <Form onSubmit={(values, actions) => setLogin({ values, actions })} />
     </Container>
-  )
+  );
 };
 
-export default Login
+export default Login;
