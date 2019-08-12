@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
 
+import api from '../../utils/services';
 import { useStateValue } from '../../state';
 import { logout } from '../../state/auth/actions';
 import useDeveloper from '../../state/matchs/hooks/useLoadDevelopers';
@@ -11,6 +13,7 @@ import useDislikeDeveloper from '../../state/matchs/hooks/useDislikeDeveloper';
 import Container from '../../components/container';
 import List from './components/list';
 import Card from './components/card';
+import MatchComponent from './components/match';
 import { Empty, Logo } from './components/styles';
 import Spinner from '../../components/spinner';
 
@@ -21,9 +24,20 @@ const Home = () => {
   const [loadingLike, likeDeveloper] = useLikeDeveloper();
   const [loadingDislike, dislikeDeveloper] = useDislikeDeveloper();
   const [{ auth, developers }, dispatch] = useStateValue();
+  const [matchDev, setMatchDev] = useState(null);
 
   useEffect(() => {
     getDevelopers();
+  }, [auth.user.id]);
+
+  useEffect(() => {
+    const socket = io(api.url, {
+      query: { user: auth.user.id },
+    });
+
+    socket.on('match', dev => {
+      setMatchDev(dev);
+    });
   }, [auth.user.id]);
 
   const handleLike = async id => {
@@ -45,12 +59,11 @@ const Home = () => {
       <Logo onClick={() => handleLogout()}>
         <img src={LogoTindev} alt="Tindev" />
       </Logo>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <List>
-          {developers.list && developers.list.length > 0 ? (
-            developers.list.map(dev => (
+      {isLoading && <Spinner />}
+      <>
+        {developers.list && developers.list.length > 0 ? (
+          <List>
+            {developers.list.map(dev => (
               <Card
                 key={dev.id}
                 name={dev.name}
@@ -59,11 +72,20 @@ const Home = () => {
                 like={() => handleLike(dev.id)}
                 dislike={() => handleDislike(dev.id)}
               />
-            ))
-          ) : (
-            <Empty>Acabou :( </Empty>
-          )}
-        </List>
+            ))}
+          </List>
+        ) : (
+          <Empty>Acabou :( </Empty>
+        )}
+      </>
+
+      {matchDev && (
+        <MatchComponent
+          onClick={() => setMatchDev(false)}
+          name={matchDev.name}
+          avatar={matchDev.avatar}
+          bio={matchDev.bio}
+        />
       )}
     </Container>
   );

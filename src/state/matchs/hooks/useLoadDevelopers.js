@@ -17,6 +17,7 @@ const useDevelopers = () => {
     } else {
       dispatch(listDeveloper(response.error));
     }
+
     setIsLoading(false);
   };
 
